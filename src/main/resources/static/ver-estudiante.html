@@ -44,15 +44,22 @@
 
       if (!id) return;
 
-      const response = await fetch(`http://localhost:8080/students/${id}`);
-      const estudiante = await response.json();
+      try {
+        const response = await fetch(`api/estudiantes/${id}`);
+        if (!response.ok) throw new Error("No se encontró el estudiante");
 
-      document.getElementById("ver-id").textContent = estudiante.id;
-      document.getElementById("ver-nombre").textContent = estudiante.nombre;
-      document.getElementById("ver-apellido").textContent = estudiante.apellido;
-      document.getElementById("ver-email").textContent = estudiante.email;
-      document.getElementById("ver-telefono").textContent = estudiante.telefono;
-      document.getElementById("ver-idioma").textContent = estudiante.idioma;
+        const estudiante = await response.json();
+
+        document.getElementById("ver-id").textContent = estudiante.id;
+        document.getElementById("ver-nombre").textContent = estudiante.nombre;
+        document.getElementById("ver-apellido").textContent = estudiante.apellido;
+        document.getElementById("ver-email").textContent = estudiante.email;
+        document.getElementById("ver-telefono").textContent = estudiante.telefono;
+        document.getElementById("ver-idioma").textContent = estudiante.idioma;
+
+      } catch (error) {
+        alert("Error al cargar el estudiante: " + error.message);
+      }
     });
 </script>
 </body>

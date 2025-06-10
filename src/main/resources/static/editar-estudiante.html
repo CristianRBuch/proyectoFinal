@@ -64,15 +64,22 @@
 
     if (!id) return;
 
-    const response = await fetch(`http://localhost:8080/students/${id}`);
-    const estudiante = await response.json();
+    try {
+      const response = await fetch(`api/estudiantes/${id}`);
+      if (!response.ok) throw new Error("No se encontró el estudiante");
 
-    document.getElementById("id").value = estudiante.id;
-    document.getElementById("nombre").value = estudiante.nombre;
-    document.getElementById("apellido").value = estudiante.apellido;
-    document.getElementById("email").value = estudiante.email;
-    document.getElementById("telefono").value = estudiante.telefono;
-    document.getElementById("idioma").value = estudiante.idioma;
+      const estudiante = await response.json();
+
+      document.getElementById("id").value = estudiante.id;
+      document.getElementById("nombre").value = estudiante.nombre;
+      document.getElementById("apellido").value = estudiante.apellido;
+      document.getElementById("email").value = estudiante.email;
+      document.getElementById("telefono").value = estudiante.telefono;
+      document.getElementById("idioma").value = estudiante.idioma;
+
+    } catch (error) {
+      alert("Error al cargar estudiante: " + error.message);
+    }
   });
 
   document.getElementById("form-editar").addEventListener("submit", async function (e) {
@@ -86,19 +93,23 @@
 
     const estudiante = { nombre, apellido, email, telefono, idioma };
 
-    const response = await fetch(`http://localhost:8080/students/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(estudiante)
-    });
+    try {
+      const response = await fetch(`api/estudiantes/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(estudiante)
+      });
 
-    if (response.ok) {
-      document.getElementById("mensaje-confirmacion").classList.remove("d-none");
-      setTimeout(() => {
-        window.location.href = "usuarios.html#listado";
-      }, 2000);
-    } else {
-      alert("Error al actualizar estudiante.");
+      if (response.ok) {
+        document.getElementById("mensaje-confirmacion").classList.remove("d-none");
+        setTimeout(() => {
+          window.location.href = "usuarios.html#listado";
+        }, 2000);
+      } else {
+        throw new Error("No se pudo actualizar");
+      }
+    } catch (error) {
+      alert("Error al actualizar estudiante: " + error.message);
     }
   });
 </script>
