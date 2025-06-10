@@ -1,5 +1,5 @@
 async function cargarEstudiantes() {
-  const res = await fetch("http://localhost:8080/students");
+  const res = await fetch("api/estudiantes");
   const estudiantes = await res.json();
   const tbody = document.querySelector("#usuarios tbody");
   tbody.innerHTML = "";
@@ -39,7 +39,7 @@ async function editarEstudianteParcial(id) {
 async function eliminarEstudiante(id) {
   if (!confirm("¿Desea eliminar este estudiante?")) return;
 
-  await fetch(`http://localhost:8080/students/${id}`, {
+  await fetch(`api/estudiantes/${id}`, {
     method: "DELETE"
   });
 
@@ -59,7 +59,7 @@ document.getElementById("form-estudiante").addEventListener("submit", async func
   };
 
   try {
-    const response = await fetch("http://localhost:8080/students", {
+    const response = await fetch("api/estudiantes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(estudiante)
